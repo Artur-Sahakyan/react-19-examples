@@ -12,7 +12,7 @@ const FormState = () => {
         else{
             return {
                 success: false,
-                text: "Oops!! ape"
+                text: "ERRORRR"
             }
         }
     }

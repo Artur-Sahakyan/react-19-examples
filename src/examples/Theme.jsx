@@ -1,4 +1,5 @@
 import { createContext, useState, use } from 'react';
+import PropTypes from 'prop-types';
 
 const ThemeContext = createContext();
 
@@ -16,8 +17,18 @@ const ThemeProvider = ({ children }) => {
   );
 };
 
+ThemeProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const user = fetch("https://jsonplaceholder.typicode.com/todos/").then(r => r.json());
+
 const Card = () => {
   const { theme, toggleTheme } = use(ThemeContext);
+
+  const response = use(user);
+
+  console.log(response, ' response ');
 
   return (
     <div
