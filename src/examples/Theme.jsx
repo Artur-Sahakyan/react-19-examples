@@ -21,14 +21,12 @@ ThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const user = fetch("https://jsonplaceholder.typicode.com/todos/").then(r => r.json());
+// const user = fetch("https://jsonplaceholder.typicode.com/todos/").then(r => r.json());
 
 const Card = () => {
   const { theme, toggleTheme } = use(ThemeContext);
 
-  const response = use(user);
-
-  console.log(response, ' response ');
+  // const response = use(user);
 
   return (
     <div

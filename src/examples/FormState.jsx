@@ -19,7 +19,6 @@ const FormState = () => {
     email: "init email",
   });
 
-  console.log(formState, ' formState')
   return (
     <>
       <div>{JSON.stringify(formState.data)}</div>
