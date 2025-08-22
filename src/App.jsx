@@ -1,37 +1,24 @@
-import Optimistic from "./examples/Optimistic";
-import FormStatus from "./examples/FormStatus";
-import FormState from "./examples/FormState";
-import Theme from "./examples/Theme";
-import Users from "./examples/Users";
-import { Suspense } from "react";
-import { use } from "react";
-import "./App.css";
+import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
+import Hero from "./components/Hero.jsx";
+import Contact from "./components/Contact.jsx";
 
-const fetchPosts =  fetch("https://jsonplaceholder.typicode.com/users").then(r => r.json());
-
-
-function Loading() {
-  return <h1 className="text-2xl text-center font-bold mt-5">Loading...</h1>;
-}
-
-function App() {
-  const users = use(fetchPosts)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <Suspense fallback={ <Loading/> }>
-
-          <Users fetchPosts={users} />
-          <FormState />
-          <FormStatus />
-          <Optimistic />
-          <Theme />
-
-        </Suspense>
-      </div>
-    </>
+    <div className="min-h-dvh bg-slate-50 text-slate-900">
+      <Header />
+      <main className="space-y-16 sm:space-y-24">
+        <Hero />
+        <Contact /> 
+        {/* <HowWeHelp />
+        <Services />
+        <Testimonials />
+        <Pricing />
+        <FAQ />
+        <CTA />
+        <Contact /> */}
+      </main>
+      <Footer />
+    </div>
   );
 }
-
-export default App;
