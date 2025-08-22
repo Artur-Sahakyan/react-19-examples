@@ -1,56 +1,68 @@
-import { useOptimistic, useState } from "react";
+"use client";
 
-const Optimistic = () => {
+import { useState, useOptimistic } from "react";
+
+function fakeDelayAction(payload) {
+  return new Promise((res) => setTimeout(() => res(payload), 1000));
+}
+
+export default function Optimistic() {
 
   const [messages, setMessages] = useState([
-    { text: "Intial message", sending: false, key: 1 },
+    { id: 1, text: "Initial message", sending: false },
   ]);
   
   const [optimisticMessages, addOptimisticMessage] = useOptimistic(
     messages,
-    (state, newMessage) => [
-      ...state,
-      {
-        text: newMessage,
-        sending: true,
-      },
-    ]
+    (state, optimisticItem) => [...state, optimisticItem]
   );
 
-  async function sendFormData(formData) {
-    const sentMessage = await fakeDelayAction(formData.get("message"));
-    setMessages((messages) => [...messages, { text: sentMessage }]);
+  async function submitData(formData) {
+    const username = formData.get("username")?.trim() || "Art";
+    const message = formData.get("message")?.trim() || "Messageee";
+
+    const text = `${username}: ${message}`;
+    const tempId = Date.now();
+
+    addOptimisticMessage({ id: tempId, text, sending: true });
+    const sent = await fakeDelayAction(text);
+
+    setMessages((prev) => [
+      ...prev,
+      { id: tempId, text: sent, sending: false },
+    ]);
   }
-
-  async function fakeDelayAction(message) {
-    await new Promise((res) => setTimeout(res, 1000));
-    return message;
-  }
-
-  const submitData = async (userData) => {
-    addOptimisticMessage(userData.get("username"));
-
-    await sendFormData(userData);
-  };
 
   return (
-    <> 
-      {optimisticMessages.map((message, index) => (
-        <div className="font-bold" key={index}>
-          {message.text}
-          {!!message.sending && <small> (Sending...)</small>}
+    <>
+      <h3 className="text-red-300 font-bold">useOptimistic() example</h3>
+
+      <div className="space-y-1 mb-4">
+        {optimisticMessages.map((m) => (
+          <div className="font-bold" key={m.id}>
+            {m.text}
+            {m.sending ? <p> (Sending...)</p> : null}
+          </div>
+        ))}
+      </div>
+
+      <form action={submitData} className="space-y-3">
+
+        <div>
+          <label className="mr-2">Username</label>
+          <input name="username" className="border-2 rounded-md p-1" />
         </div>
-      ))}
-      <form action={submitData}>
-      <h3 className="text-orange-400 font-bold">useOptimistic() example</h3>
-        <div className="my-3">
-          <label>Username</label>
-          <input type="text" name="username" className="border-2 rounded-md"/>
+
+        <div>
+          <label className="mr-2">Message</label>
+          <input name="message" className="border-2 rounded-md p-1"/>
         </div>
-        <button type="submit" className="bg-blue-400">Submit</button>
+
+        <button type="submit" className="bg-blue-400 text-white px-3 py-1 rounded">
+          Submit
+        </button>
+
       </form>
     </>
   );
-};
-
-export default Optimistic;
+}
